@@ -1,0 +1,8 @@
+# Ignore pycache files
+*.pyc
+
+# Ignore json files
+*.json
+
+# Ignore swp files
+*.swp
