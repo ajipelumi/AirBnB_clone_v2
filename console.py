@@ -126,7 +126,7 @@ class HBNBCommand(cmd.Cmd):
             return
 
         new_instance = HBNBCommand.classes[c_name]()
-        
+
         # Argument is met
         if c_arg is not None and c_arg != '':
 
@@ -141,7 +141,7 @@ class HBNBCommand(cmd.Cmd):
 
                 if not isinstance(value, (str, float, int)):
                     continue  # Skip the argument
-                
+
                 elif isinstance(value, str):  # String is passed
                     value = value.split('_')
                     value = ' '.join(value)
@@ -214,7 +214,7 @@ class HBNBCommand(cmd.Cmd):
         key = c_name + "." + c_id
 
         try:
-            del(storage.all()[key])
+            del (storage.all()[key])
             storage.save()
         except KeyError:
             print("** no instance found **")
@@ -346,6 +346,7 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
