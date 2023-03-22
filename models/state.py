@@ -10,10 +10,10 @@ class State(BaseModel, Base):
     __tablename__ = 'states'
     name = Column(String(128), nullable=False)
 
-    cities = relationship('City', cascade='all,delete'
+    cities = relationship('City', cascade='all, delete',
                           backref='state')
 
     @property
     def cities(self):
         """ Getter for cities attribute. """
-        return [city for city in self.cities if city.state_id = self.id]
+        return [city for city in self.cities if city.state_id == self.id]

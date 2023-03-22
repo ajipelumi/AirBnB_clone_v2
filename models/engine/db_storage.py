@@ -21,29 +21,33 @@ class DBStorage():
         self.__engine = create_engine(
             f'mysql+mysqldb://{user}:{pwd}@{host}/{db}',
             pool_pre_ping=True)
+        self.__session = Session(self.__engine)
 
         if os.getenv('HBNB_ENV') == 'test':
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
         """ Returns a dictionary of models currently in database storage. """
+        from models.user import User
+        from models.place import Place
+        from models.state import State
+        from models.city import City
+        from models.amenity import Amenity
+        from models.review import Review
 
-        self.__session = Session(self.__engine)
         if cls is None:
-            all_objs = self.__session.query('User', 'State', 'City'
-                                            'Amenity', 'Place', 'Review').all()
-            all_dict = {}
-            for obj in all_objs:
-                key = f"{obj.__class__.__name__}.{obj.id}"
-                all_dict[key] = obj
-            return (all_dict)
+            classes = [User, State, City, Amenity, Place, Review]
         else:
-            cls_objs = self.__session.query(cls).all()
-            cls_dict = {}
-            for obj in all_objs:
+            classes = [cls]
+
+        obj_dict = {}
+        for c in classes:
+            objs = self.__session.query(c).all()
+            for obj in objs:
                 key = f"{obj.__class__.__name__}.{obj.id}"
-                cls_dict[key] = obj
-            return (cls_dict)
+                obj_dict[key] = obj
+
+        return obj_dict
 
     def new(self, obj):
         """ Add the object to the current database session. """
@@ -60,7 +64,6 @@ class DBStorage():
 
     def reload(self):
         """ Create all tables in the database. """
-        from models.base_model import Base
         from models.user import User
         from models.place import Place
         from models.state import State
