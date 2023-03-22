@@ -58,8 +58,6 @@ class FileStorage:
         """Deletes obj from __objects if it’s inside and is not None"""
 
         if obj:
-            # print(f"IDDD: {obj.id}")
-            # print(self.__objects.keys())
             dataKey = f"{obj.__class__.__name__}.{obj.id}"
             if dataKey in self.__objects.keys():
                 del (self.__objects[dataKey])
