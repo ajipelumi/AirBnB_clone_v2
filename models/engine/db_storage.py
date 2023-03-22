@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """ This module defines a class to manage database storage for hbnb clone. """
-from sqlalchemy import create_engine, Metadata
-from sqlalchemy.orm import Session
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session, sessionmaker, scoped_session
 from models.base_model import Base
 import os
 
@@ -18,9 +18,9 @@ class DBStorage():
         pwd = os.getenv('HBNB_MYSQL_PWD')
         host = 'localhost'
         db = os.getenv('HBNB_MYSQL_DB')
-        self.__engine = create_engine(f'mysql+mysqldb://
-                                      {user}:{pwd}@{host}
-                                      /{db}', pool_pre_ping=True)
+        self.__engine = create_engine(
+            f'mysql+mysqldb://{user}:{pwd}@{host}/{db}',
+            pool_pre_ping=True)
 
         if os.getenv('HBNB_ENV') == 'test':
             Base.metadata.drop_all(self.__engine)
@@ -31,7 +31,7 @@ class DBStorage():
         self.__session = Session(self.__engine)
         if cls is None:
             all_objs = self.__session.query('User', 'State', 'City'
-                                     'Amenity', 'Place', 'Review').all()
+                                            'Amenity', 'Place', 'Review').all()
             all_dict = {}
             for obj in all_objs:
                 key = f"{obj.__class__.__name__}.{obj.id}"
@@ -69,3 +69,7 @@ class DBStorage():
         from models.review import Review
 
         Base.metadata.create_all(self.__engine)
+
+        session = sessionmaker(self.__engine, expire_on_commit=False)
+        Session = scoped_session(session)
+        self.__session = Session()
