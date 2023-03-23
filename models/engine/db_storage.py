@@ -32,11 +32,10 @@ class DBStorage():
         from models.place import Place
         from models.state import State
         from models.city import City
-        from models.amenity import Amenity
         from models.review import Review
 
         if cls is None:
-            classes = [User, State, City, Amenity, Place, Review]
+            classes = [User, State, City, Place, Review]
         else:
             classes = [cls]
 
