@@ -1,0 +1,11 @@
+
+
+		root /var/www/html;
+
+		location / {
+		 add_header X-Served-By hostname;
+		}
+
+		location /hbnb_static/ {
+		 alias /data/web_static/current/hbnb_static;
+		}
