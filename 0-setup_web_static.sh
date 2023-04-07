@@ -32,7 +32,7 @@ echo "$content" | sudo tee /data/web_static/releases/test/index.html
 sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
 
 # Change ownership and group to ubuntu
-sudo chown -hR ubuntu:ubuntu /data/
+sudo chown -R ubuntu:ubuntu /data/
 
 # Copy location block to config file
 sudo sed -i 's/server_name _;/server_name _;\n\tlocation \/hbnb_static {\n\t\talias \/data\/web_static\/current\/;\n\t}/g' /etc/nginx/sites-enabled/default
