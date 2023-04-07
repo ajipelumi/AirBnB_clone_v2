@@ -7,10 +7,7 @@ sudo apt update
 # Install Nginx
 sudo apt install -y nginx
 
-# Create necessary folders
-sudo mkdir -p /data/
-sudo mkdir -p /data/web_static/
-sudo mkdir -p /data/web_static/releases/
+# Create necessary folders and files
 sudo mkdir -p /data/web_static/shared/
 sudo mkdir -p /data/web_static/releases/test/
 sudo touch /data/web_static/releases/test/index.html
