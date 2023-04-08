@@ -2,7 +2,7 @@
 # This script sets up our web servers for the deployment of web_static.
 
 # Update system
-sudo apt update
+sudo apt -y update
 
 # Install Nginx
 sudo apt install -y nginx
@@ -32,7 +32,7 @@ sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
 sudo chown -R ubuntu:ubuntu /data/
 
 # Copy location block to config file
-sudo sed -i 's/server_name _;/server_name _;\n\tlocation \/hbnb_static\/ {\n\t\talias \/data\/web_static\/current\/;\n\t}/g' /etc/nginx/sites-enabled/default
+sudo sed -i 's/server_name _;/server_name _;\n\tlocation \/hbnb_static {\n\t\talias \/data\/web_static\/current\/;\n\t}/g' /etc/nginx/sites-enabled/default
 
 # Restart Nginx
 sudo service nginx restart
