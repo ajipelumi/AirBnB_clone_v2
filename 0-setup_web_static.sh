@@ -8,8 +8,8 @@ sudo apt -y update
 sudo apt install -y nginx
 
 # Create necessary folders and files
-sudo mkdir -p /data/web_static/shared/
-sudo mkdir -p /data/web_static/releases/test/
+sudo [ -d /data/web_static/shared/ ] || sudo mkdir -p /data/web_static/shared/
+sudo [ -d /data/web_static/releases/test/ ] || sudo mkdir -p /data/web_static/releases/test/
 sudo touch /data/web_static/releases/test/index.html
 
 # Write into index.html
