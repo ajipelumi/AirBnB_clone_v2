@@ -7,6 +7,7 @@ import os
 env.hosts = ['52.23.245.131', '18.215.160.38']
 env.user = "ubuntu"
 
+
 def do_deploy(archive_path):
     """ Distributes an archive to our web servers. """
     if not os.path.exists(archive_path):
@@ -21,17 +22,21 @@ def do_deploy(archive_path):
     basename = os.path.basename(archive_path)
     file = os.path.splitext(basename)[0]
     new_folder = '/data/web_static/releases/{}'.format(file)
-    
+
     result = sudo('mkdir -p {}'.format(new_folder))
     if result.failed:
         return False
 
-    result = sudo('tar -xzf /tmp/{} -C {}/'.format(basename, new_folder)) 
+    result = sudo('tar -xzf /tmp/{} -C {}/'.format(basename, new_folder))
     if result.failed:
         return False
 
     # Delete the archive from the web server
     result = sudo('rm -rf /tmp/{}'.format(basename))
+    if result.failed:
+        return False
+
+    result = sudo('mv {}/web_static/* {}/'.format(new_folder, new_folder))
     if result.failed:
         return False
 
@@ -46,4 +51,3 @@ def do_deploy(archive_path):
         return False
 
     return True
-
