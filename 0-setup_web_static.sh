@@ -2,54 +2,29 @@
 # This script sets up our web servers for the deployment of web_static.
 
 # Update system
-apt update
+sudo apt update -y
 
 # Install Nginx
-apt install -y nginx
+sudo apt install nginx -y
 
-# Create necessary folders and files
-mkdir -p /data/web_static/shared/
-mkdir -p /data/web_static/releases/test/
-touch /data/web_static/releases/test/index.html
+# Create necessary folders
+sudo [ -d /data/web_static/shared/ ] || sudo mkdir /data/web_static/shared/ -p
+sudo [ -d /data/web_static/releases/test/ ] || sudo mkdir /data/web_static/releases/test/ -p
+sudo touch /data/web_static/releases/test/index.html
 
 # Write into index.html
-content="\
-<html>
-  <head>
-  </head>
-  <body>
-    Holberton School
-  </body>
-</html>"
-
-# Write content into index.html
-echo "$content" | tee /data/web_static/releases/test/index.html
+echo "Holberton School" | sudo tee /data/web_static/releases/test/index.html
 
 # Create symbolic link
-ln -sf /data/web_static/releases/test/ /data/web_static/current
+sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
 
 # Change ownership and group to ubuntu
-chown -R ubuntu:ubuntu /data/
+sudo chown -R ubuntu:ubuntu /data/
 
-# Configure server
-SERVER_CONFIG="\
-server	{
-		listen 80 default_server;
-		listen [::]:80 default_server;
-		root /var/www/html;
-		index index.html index.htm index.nginx-debian.html;
-		server_name _;
-		location /hbnb_static {
-					add_header X-Served-By \$hostname;
-					alias /data/web_static/current;
-		location / {
-					add_header X-Served-By \$hostname;
-					try_files \$uri \$uri/ =404;
-		}
-}"
+replace="server_name _;\n\n\tlocation \/hbnb_static\/ {\n\t\t alias \/data\/web_static\/current\/;\n\t\tautoindex on;\n\t\tadd_header X-Served-By \$hostname;\n\t}"
 
-# Place configuration in nginx file
-bash -c "echo -e '$SERVER_CONFIG' > /etc/nginx/sites-enabled/default"
+# Copy replace to config file
+sudo sed -i "s/server_name _;/$replace/" /etc/nginx/sites-enabled/default
 
 # Restart Nginx
-service nginx restart
+sudo service nginx restart
