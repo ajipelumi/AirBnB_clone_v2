@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # A fabric script that deploys to a web server.
-from fabric.api import local, env, put, sudo
+from fabric.api import local, env, put, run, sudo
 from datetime import datetime
 import os
 
@@ -75,3 +75,23 @@ def deploy():
     """ Creates and distributes an archive to our web servers. """
     path = do_pack()
     return do_deploy(path)
+
+
+def do_clean(number=0):
+    """ Deletes out-of-date archives. """
+    number = int(number)
+
+    if number == 0:
+        number = 1
+
+    result = local('ls -t versions | head -{}'.format(number), capture=True)
+    all_files = local('ls versions', capture=True)
+    for file in all_files.split('\n'):
+        if file != result.strip():
+            local('rm versions/{}'.format(file))
+
+    result = run('ls -t /data/web_static/releases | head -{}'.format(number))
+    all_files = run('ls /data/web_static/releases')
+    for file in all_files.split('\n'):
+        if file != result.strip():
+            sudo('rm -rf /data/web_static/releases/{}'.format(file))
