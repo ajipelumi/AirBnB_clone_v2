@@ -2,29 +2,40 @@
 # This script sets up our web servers for the deployment of web_static.
 
 # Update system
-sudo apt update -y
+sudo apt update
 
 # Install Nginx
-sudo apt install nginx -y
+sudo apt install -y nginx
 
 # Create necessary folders
-sudo [ -d /data/web_static/shared/ ] || sudo mkdir /data/web_static/shared/ -p
-sudo [ -d /data/web_static/releases/test/ ] || sudo mkdir /data/web_static/releases/test/ -p
+sudo mkdir -p /data/
+sudo mkdir -p /data/web_static/
+sudo mkdir -p /data/web_static/releases/
+sudo mkdir -p /data/web_static/shared/
+sudo mkdir -p /data/web_static/releases/test/
 sudo touch /data/web_static/releases/test/index.html
 
 # Write into index.html
-echo "Holberton School" | sudo tee /data/web_static/releases/test/index.html
+content="\
+<html>
+  <head>
+  </head>
+  <body>
+    Holberton School
+  </body>
+</html>"
+
+# Write content into index.html
+echo "$content" | sudo tee /data/web_static/releases/test/index.html
 
 # Create symbolic link
 sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
 
 # Change ownership and group to ubuntu
-sudo chown -R ubuntu:ubuntu /data/
+sudo chown -hR ubuntu:ubuntu /data/
 
-replace="server_name _;\n\n\tlocation \/hbnb_static\/ {\n\t\t alias \/data\/web_static\/current\/;\n\t\tautoindex on;\n\t\tadd_header X-Served-By \$hostname;\n\t}"
-
-# Copy replace to config file
-sudo sed -i "s/server_name _;/$replace/" /etc/nginx/sites-enabled/default
+# Copy location block to config file
+sudo sed -i 's/server_name _;/server_name _;\n\tlocation \/hbnb_static {\n\t\talias \/data\/web_static\/current\/;\n\t}/g' /etc/nginx/sites-enabled/default
 
 # Restart Nginx
 sudo service nginx restart
