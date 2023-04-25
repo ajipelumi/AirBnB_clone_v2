@@ -61,3 +61,7 @@ class FileStorage:
             dataKey = f"{obj.__class__.__name__}.{obj.id}"
             if dataKey in self.__objects.keys():
                 del (self.__objects[dataKey])
+
+    def close(self):
+        """ Calls the reload method. """
+        self.reload()

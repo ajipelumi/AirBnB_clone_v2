@@ -3,6 +3,8 @@
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
+from models import storage
+from models.city import City
 
 
 class State(BaseModel, Base):
@@ -16,4 +18,8 @@ class State(BaseModel, Base):
     @property
     def cities(self):
         """ Getter for cities attribute. """
-        return [city for city in self.cities if city.state_id == self.id]
+        city_objs = []
+        for city in list(storage.all(City).values()):
+            if city.state_id == self.id:
+                city_objs.append(city)
+        return city_objs

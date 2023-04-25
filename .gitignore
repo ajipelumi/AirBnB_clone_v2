@@ -7,3 +7,6 @@ models/__pycache__/
 
 # Ignore swp files
 *.swp
+
+# Ignore main files
+*main.py
