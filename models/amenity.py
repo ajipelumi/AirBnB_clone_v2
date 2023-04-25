@@ -3,14 +3,16 @@
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
-from models.place import place_amenity
+import os
 
 
 class Amenity(BaseModel, Base):
     """ Defines Amenity class. """
     __tablename__ = 'amenities'
+    if os.environ.get('HBNB_TYPE_STORAGE') == 'db':
+        name = Column(String(128), nullable=False)
 
-    name = Column(String(128), nullable=False)
-
-    place_amenities = relationship('Place', secondary=place_amenity,
-                                    viewonly=False, backref='amenities')
+        place_amenities = relationship('Place', secondary=place_amenity,
+                                       viewonly=False, backref='amenities')
+    else:
+        name = ""
